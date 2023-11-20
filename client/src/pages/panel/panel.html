@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="../../assets/fonts/Roboto/500.css">
+    <link rel="stylesheet" href="../../assets/css/globals.css">
+    <link rel="stylesheet" href="panel.css">
+</head>
+<body>
+    <script src="js/panel.js" defer></script>
+    <div class="wrapper">
+        <header>
+            <button class="icon exit"></button>
+            <h1 class="header-caption">
+                Admin Panel
+            </h1>
+        </header>
+        <main>
+            <div class="control-wrapper">
+                <div class="control">
+                    <h2 class="server-name">Если вы это видите, то скорее всего произошла ошибка.</h2>
+                </div>
+                <div class="server-state server-state-disabled">
+                    <img src="./assets/offline.svg" alt="состояние сервера" class="icon">
+                    <span>
+                        Выключен
+                    </span>
+                </div>
+            </div>
+            <button class="server-toggle server-toggle-enabled">Запустить</button>
+                <!--
+            </div>
+            <div class="rcon-wrapper">
+                <div class="rcon">
+                    <code>
+                        blah blah blah
+                    </code>
+                    <input type="text" placeholder="|">
+                </div>
+            </div> 
+        -->
+        </main>
+        <footer>
+
+        </footer>
+    </div>
+</body>
+</html>
