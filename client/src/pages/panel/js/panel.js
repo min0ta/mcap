@@ -16,28 +16,25 @@ const serverStateElement = gcel("server-state")
 const serverToggleButton = gcel("server-toggle")
 serverName.textContent = "<server name>"
 
-function __toggleServerState() {
+/** * @param {{serverState: boolean, oldServerStateClass: string, newServerStateClass: string, barIconSrc: string, barText: string, buttonText: string, buttonOldClass: string, buttonNewClass: string}} param0  */
+function setServerState({serverState, oldServerStateClass, newServerStateClass, barIconSrc, barText, buttonText, buttonOldClass, buttonNewClass}) {
+    state.isServerOnline = serverState
+    serverStateElement.classList.replace(oldServerStateClass, newServerStateClass);
+    // this is kinda hacky but i was too lazy to select muiltiple elements just to change their src
+    /*** @type {HTMLImageElement}*/
+    (serverStateElement.children[0]).src = barIconSrc
+    serverStateElement.children[1].textContent = barText
+    
+    serverToggleButton.textContent = buttonText
+    serverToggleButton.classList.replace(buttonOldClass, buttonNewClass)
+}
+
+function toggleServerState() {
     if (state.isServerOnline) {
-        state.isServerOnline = false
-        serverStateElement.classList.replace("server-state-enabled", "server-state-disabled");
-        // this is kinda hacky but i was too lazy to select muiltiple elements just to change their src
-        /*** @type {HTMLImageElement}*/
-        (serverStateElement.children[0]).src = "./assets/offline.svg"
-        serverStateElement.children[1].textContent = "Выключен"
-        
-        serverToggleButton.textContent = "Запустить"
-        serverToggleButton.classList.replace("server-toggle-disabled", "server-toggle-enabled")
+        setServerState({serverState: false, oldServerStateClass: "server-state-enabled", newServerStateClass: "server-state-disabled", barIconSrc: "./assets/offline.svg", barText:"Выключен", buttonText: "Запустить", buttonOldClass: "server-toggle-disabled", buttonNewClass: "server-toggle-enabled"})
         return
     }
-    state.isServerOnline = true
-    serverStateElement.classList.replace("server-state-disabled", "server-state-enabled");
-    /*** @type {HTMLImageElement}*/
-    serverStateElement.children[0].src = "./assets/online.svg"
-    serverStateElement.children[1].textContent = "Включен"
-
-    serverToggleButton.textContent = "Остановить"
-    serverToggleButton.classList.replace("server-toggle-enabled", "server-toggle-disabled")
-
+    setServerState({serverState: true, oldServerStateClass: "server-state-disabled", newServerStateClass: "server-state-enabled", barIconSrc:"./assets/online.svg", barText:"Включен", buttonText:"Остановить", buttonOldClass: "server-toggle-enabled", buttonNewClass: "server-toggle-disabled"})
 }
 
 function lockUI() {
@@ -50,5 +47,5 @@ function unlockUI() {
 }
 
 function updateServerState() {
-    __toggleServerState()
+    toggleServerState()
 }
