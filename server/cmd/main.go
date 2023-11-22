@@ -1,7 +1,12 @@
 package main
 
-import "mcap/internal/test"
+import (
+	"mcap/internal/auth"
+	"mcap/internal/config"
+)
 
 func main() {
-	test.Test()
+	cfg := config.New()
+	authh := auth.New(cfg)
+	authh.Test()
 }

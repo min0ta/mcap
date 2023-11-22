@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
+	"os"
 	"strings"
 )
 
@@ -68,15 +70,18 @@ func ParseParams(path string) func(url string) (map[string]string, error) {
 	}
 }
 
-// Deprecated: use Error instead
-func WriteError(w http.ResponseWriter, err error) {
-	WriteResult(w, Response{"err": err.Error()}, 400)
-}
-
 func Error(w http.ResponseWriter, err string, status int) {
 	WriteResult(w, Response{"err": err}, status)
 }
 
 func Result(w http.ResponseWriter, res any) {
 	WriteResult(w, Response{"res": res}, 200)
+}
+
+func RequireFile(filepath string) []byte {
+	file, err := os.ReadFile(filepath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return file
 }

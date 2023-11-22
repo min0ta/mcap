@@ -6,7 +6,7 @@ type AuthoriztaionQuery struct {
 }
 
 type usersRecord struct {
-	Role     Role
-	Username string
-	Password string
+	Role     Role   `json:"role"`
+	Username string `json:"username"`
+	Password string `json:"password"`
 }

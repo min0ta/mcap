@@ -19,11 +19,24 @@ const (
 )
 
 type Authoriztaion struct {
-	records []usersRecord
-	cfg     *config.Config
+	db  *JsonDB
+	cfg *config.Config
 }
 
 type Role int
+
+func New(cfg *config.Config) *Authoriztaion {
+	a := &Authoriztaion{
+		cfg: cfg,
+		db:  newJsonDb(),
+	}
+	a.db.Connect(cfg.PATH_TO_JSON_DB)
+	return a
+}
+
+func (s *Authoriztaion) Test() {
+	fmt.Println(s.db.records[0].Role)
+}
 
 func (s *Authoriztaion) Authorize(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
@@ -36,7 +49,7 @@ func (s *Authoriztaion) Authorize(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	role := contains(s.records, func(u usersRecord) bool {
+	role := s.db.contains(func(u usersRecord) bool {
 		return (u.Username == query.User) && (u.Password == query.Password)
 	})
 
