@@ -9,6 +9,7 @@ type Err = uint16
 
 const (
 	ErrorInvalidQuery uint16 = iota
+	ErrorBadLoginOrPassword
 )
 
 type McapError struct {
@@ -22,7 +23,9 @@ func New(e Err) McapError {
 	if e == ErrorInvalidQuery {
 		stringified = "invalid query"
 	}
-
+	if e == ErrorBadLoginOrPassword {
+		stringified = "bad login or password"
+	}
 	return McapError{
 		stringified: stringified,
 		err:         e,

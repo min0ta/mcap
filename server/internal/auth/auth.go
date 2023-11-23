@@ -5,6 +5,7 @@ import (
 	"io"
 	"mcap/internal/config"
 	"mcap/internal/errors"
+	"mcap/internal/log"
 	"mcap/internal/utils"
 	"net/http"
 	"strconv"
@@ -21,13 +22,14 @@ const (
 )
 
 type Authoriztaion struct {
-	db  *JsonDB
-	cfg *config.Config
+	db     *JsonDB
+	cfg    *config.Config
+	logger *log.Logger
 }
 
 type Role int
 
-func New(cfg *config.Config) *Authoriztaion {
+func New(cfg *config.Config, logger *log.Logger) *Authoriztaion {
 	a := &Authoriztaion{
 		cfg: cfg,
 		db:  newJsonDb(),
@@ -54,7 +56,7 @@ func (s *Authoriztaion) Authorize(w http.ResponseWriter, r *http.Request) {
 	err = s.setJwtToken(role, w)
 	if err != nil {
 		// TODO: remove old style errors
-		utils.Error(w, "bad login or password", 400)
+		errors.HttpError(w, errors.ErrorBadLoginOrPassword, 400)
 		return
 	}
 	utils.WriteResult(w, utils.Response{"succes": true}, 200)
@@ -98,10 +100,12 @@ func (s *Authoriztaion) AuthCheck(r *http.Request) Role {
 		return []byte(s.cfg.JWT_SIGNING_KEY), nil
 	})
 	if err != nil {
+		s.logger.WriteFormat("ACCESS DENY! REQUEST FROM IP: %s", r.RemoteAddr)
 		return RoleGuest
 	}
 	roleStr, err := token.Claims.GetSubject()
 	if err != nil {
+		s.logger.WriteFormat("ACCESS DENY! REQUEST FROM IP: %s", r.RemoteAddr)
 		return RoleGuest
 	}
 	role, _ := strconv.ParseInt(roleStr, 10, 32)
@@ -111,6 +115,8 @@ func (s *Authoriztaion) AuthCheck(r *http.Request) Role {
 	if role == RoleAdmin {
 		return RoleAdmin
 	}
+
+	s.logger.WriteFormat("ACCESS DENY! REQUEST FROM IP: %s", r.RemoteAddr)
 	return RoleGuest
 }
 
