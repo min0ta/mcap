@@ -1,7 +1,7 @@
 package auth
 
 type AuthoriztaionQuery struct {
-	User     string `json:"user"`
+	User     string `json:"username"`
 	Password string `json:"password"`
 }
 

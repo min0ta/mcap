@@ -2,7 +2,9 @@ package auth
 
 import (
 	"fmt"
+	"io"
 	"mcap/internal/config"
+	"mcap/internal/errors"
 	"mcap/internal/utils"
 	"net/http"
 	"strconv"
@@ -34,10 +36,6 @@ func New(cfg *config.Config) *Authoriztaion {
 	return a
 }
 
-func (s *Authoriztaion) Test() {
-	fmt.Println(s.db.records[0].Role)
-}
-
 func (s *Authoriztaion) Authorize(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
 		return
@@ -45,7 +43,7 @@ func (s *Authoriztaion) Authorize(w http.ResponseWriter, r *http.Request) {
 	query := AuthoriztaionQuery{}
 	err := utils.ReadJson(r, &query)
 	if err != nil {
-		utils.Error(w, err.Error(), 400)
+		errors.HttpError(w, errors.ErrorInvalidQuery, 400)
 		return
 	}
 
@@ -55,10 +53,25 @@ func (s *Authoriztaion) Authorize(w http.ResponseWriter, r *http.Request) {
 
 	err = s.setJwtToken(role, w)
 	if err != nil {
+		// TODO: remove old style errors
 		utils.Error(w, "bad login or password", 400)
 		return
 	}
 	utils.WriteResult(w, utils.Response{"succes": true}, 200)
+}
+
+func (s *Authoriztaion) TestIfAuth(w http.ResponseWriter, r *http.Request) {
+	role := s.AuthCheck(r)
+
+	if role == RoleAdmin {
+		io.WriteString(w, "Admin")
+		return
+	}
+	if role == RoleModerator {
+		io.WriteString(w, "Moder")
+		return
+	}
+	io.WriteString(w, "Guest")
 }
 
 func (s *Authoriztaion) Unauthorize(w http.ResponseWriter, r *http.Request) {
@@ -66,10 +79,9 @@ func (s *Authoriztaion) Unauthorize(w http.ResponseWriter, r *http.Request) {
 		Name:     cookieName,
 		Expires:  time.Now().Add(time.Second * -1),
 		HttpOnly: true,
-		Domain:   "localhost",
 		Path:     "/",
 		Secure:   true,
-		SameSite: http.SameSiteNoneMode,
+		SameSite: http.SameSiteStrictMode,
 	}
 
 	http.SetCookie(w, &cookie)
@@ -121,10 +133,9 @@ func (s *Authoriztaion) setJwtToken(role Role, w http.ResponseWriter) error {
 		Value:    signed,
 		Expires:  expires,
 		HttpOnly: true,
-		Domain:   "localhost",
 		Path:     "/",
 		Secure:   true,
-		SameSite: http.SameSiteNoneMode,
+		SameSite: http.SameSiteStrictMode,
 	}
 
 	http.SetCookie(w, cookie)
