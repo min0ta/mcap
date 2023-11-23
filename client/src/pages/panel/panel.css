@@ -33,12 +33,12 @@ footer {
 .control-wrapper {
     margin-top: 3vh;
     width: min(800px, 80%);
-    color: #ededed;
+    color: #b9b9b9;
     text-align: center;
 }
 .control {
     width: 100%;
-    background-color: #5f5f5f;
+    background-color: #3a3a3a;
     padding: 5px;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
@@ -57,11 +57,11 @@ footer {
 }
 
 .server-state-disabled {
-    background-color: #cf2024;
+    background-color: #a3191b;
 }
 
 .server-state-enabled {
-    background-color: #20cf5b;
+    background-color: #22994a;
 }
 
 main {
@@ -76,18 +76,18 @@ main {
     padding: 15px;
     margin: 15px;
     border-radius: 5px;
-    box-shadow: 1px 1px 5px #3f3f3f;
+    box-shadow: 1px 1px 5px #555;
     color: #fefefe;
     font-size: 16px;
     min-width: 120px;
 }
 
 .server-toggle-enabled {
-    background: linear-gradient(0.45turn, hsl(var(--server-toggle-enabled), 75%, 65%), hsl(var(--server-toggle-enabled), 45%, 80%));
+    background: linear-gradient(0.45turn, hsl(var(--server-toggle-enabled), 75%, 45%), hsl(var(--server-toggle-enabled), 45%, 60%));
 }
 
 .server-toggle-disabled {
-    background: linear-gradient(0.45turn, hsl(var(--server-toggle-disabled), 75%, 65%), hsl(var(--server-toggle-disabled), 65%, 70%));
+    background: linear-gradient(0.45turn, hsl(var(--server-toggle-disabled), 75%, 45%), hsl(var(--server-toggle-disabled), 65%, 60%));
 }
 
 button[disabled] {
