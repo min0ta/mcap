@@ -1,5 +1,5 @@
 :root {
-    --header-color: #2f48c7;
+    --header-color: #2b3771;
     --header-text-color: #d4d9f7;
 
     /*hue*/
@@ -69,6 +69,7 @@ main {
     display: flex;
     flex-direction: column;
     align-items: center;
+    background-color: #1b1b1b;
 }
 
 .server-toggle {
