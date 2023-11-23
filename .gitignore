@@ -1,3 +1,5 @@
 templates
 
 .vscode
+
+server/server.log
