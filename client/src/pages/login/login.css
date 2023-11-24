@@ -20,17 +20,18 @@ main {
 
 input {
     border-radius: 15px;
-    background-color: #fff;
+    background-color: #444444;
     margin: 10px 0;
     padding: 10px;
     width: 100%;
+    color: #e2e2e2;
     border: 3px #b1b1b1 solid;
 }
 
 form {
-    width: clamp(200px, 30%, 800px);
-    height: clamp(300px, 50%, 800px);
-    background-color: #00000015;
+    width: clamp(200px, 30%, 400px);
+    height: clamp(300px, 40%, 400px);
+    background-color: #ffffff15;
     border-radius: 15px;
     display: flex;
     flex-direction: column;
@@ -46,7 +47,7 @@ form {
 }
 h1 {
     font-size: 24px;
-    color: #333;
+    color: #d4d4d4;
     margin-top: 15px;
 }
 
@@ -65,7 +66,7 @@ h1 {
 @media (max-width: 1000px) {
     form {
         width: clamp(200px, 85%, 800px);
-        height: clamp(300px, 60%, 800px);
+        height: clamp(300px, 40%, 800px);
     }
     input {
         padding: 15px;
