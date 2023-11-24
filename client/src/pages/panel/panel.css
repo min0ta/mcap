@@ -94,46 +94,9 @@ button[disabled] {
     color: #bdbdbd;
 }
 
-.rcon-wrapper {
-    width: 100%;
-    height: clamp(180px, 60%, 540px);
-    display: flex;
-    justify-content: center;
-}
-
-.rcon {
-    width: 80%;
-    background-color: #0f0f0f;
-    color: #ddd;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    border-radius: 10px;
-    padding: 15px;
-    border: 5px solid #505050;
-}
-
 input {
     color: #ddd;
     font-size: 16px;
-}
-
-.loading {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    border: 3px lightgray solid;
-    border-top: 3px transparent solid;
-    animation: rotate 500ms ease infinite;
-}
-
-@keyframes rotate {
-    0% {
-        rotate: 0deg;
-    }
-    100% {
-        rotate: 359deg;
-    }
 }
  
 @media (max-width: 800px) {

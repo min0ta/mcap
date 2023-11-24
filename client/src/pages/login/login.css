@@ -27,7 +27,21 @@ input {
     color: #e2e2e2;
     border: 3px #b1b1b1 solid;
 }
-
+input:focus {
+    box-shadow: 0 0 5px #fff;
+}
+button[type="submit"] {
+    border-radius: 5px;
+    background-color: #ffffff35;
+}
+button[type="submit"]:active {
+    background-color: #ffffff25;
+}
+.swrapper {
+    width: 100%;
+    display: flex;
+    justify-content: right;
+}
 form {
     width: clamp(200px, 30%, 400px);
     height: clamp(300px, 40%, 400px);
@@ -36,6 +50,10 @@ form {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+.login {
+    background: url(./assets/login.svg);
+    background-repeat: no-repeat;
 }
 .flex {
     display: flex;

@@ -29,4 +29,27 @@ main {
 .icon {
     width: 20px;
     height: 20px;
+    background-repeat: no-repeat;
+}
+
+.hidden {
+    display: none;
+}
+
+.loading {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 3px lightgray solid;
+    border-top: 3px transparent solid;
+    animation: rotate 500ms ease-in-out infinite;
+}
+
+@keyframes rotate {
+    0% {
+        rotate: 0deg;
+    }
+    100% {
+        rotate: 719deg;
+    }
 }

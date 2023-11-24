@@ -9,6 +9,7 @@
 </head>
 <body>
     <script src="../../assets/js/core.js" defer></script>
+    <script src="../../assets/js/lib.js" defer></script>
     <script src="js/login.js" defer></script>
     <div class="wrapper">
         <header>
@@ -21,10 +22,14 @@
                     <h1>Login</h1>
                     <button disabled style="display: none;"></button>
                     <div class="input-wrapper">
-                        <input type="text" placeholder="Введите имя пользователя">
+                        <input id="js-username" type="text" placeholder="Введите имя пользователя">
                         <div class="flex">
-                            <input type="password" placeholder="Введите пароль">
-                            <button class="icon eye"></button>
+                            <input id="js-password" type="password" placeholder="Введите пароль">
+                            <button id="js-lookupBtn" class="icon eye"></button>
+                        </div>
+                        <div class="swrapper">
+                            <button type="submit" class="icon login"></button>
+                            <div id="js-loading" class="hidden"></div>
                         </div>
                     </div>
                 </form>

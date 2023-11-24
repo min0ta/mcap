@@ -55,11 +55,14 @@ func (s *Authoriztaion) Authorize(w http.ResponseWriter, r *http.Request) {
 
 	err = s.setJwtToken(role, w)
 	if err != nil {
-		// TODO: remove old style errors
-		errors.HttpError(w, errors.ErrorBadLoginOrPassword, 400)
+		errors.HttpError(w, errors.ErrorBadLoginOrPassword, 401)
 		return
 	}
-	utils.WriteResult(w, utils.Response{"succes": true}, 200)
+	if role != RoleGuest {
+		utils.WriteResult(w, utils.Response{"succes": true}, 200)
+		return
+	}
+	errors.HttpError(w, errors.ErrorBadLoginOrPassword, 401)
 }
 
 func (s *Authoriztaion) TestIfAuth(w http.ResponseWriter, r *http.Request) {
