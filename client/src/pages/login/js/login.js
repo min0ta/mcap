@@ -25,15 +25,21 @@ const submitButton = gcel("login")
 
 /*** @type {HTMLButtonElement}*/
 const usernameInput = gid("js-username")
+/** @type {HTMLParagraphElement} */
+const errorOutput = gid("js-errorOutput")
 submitButton.addEventListener("click", async e => {
     if (state.isUiLocked) {
         return
     }
     e.preventDefault()
-    const password = passwordInput.textContent
-    const username = usernameInput.textContent
+    const password = passwordInput.value
+    const username = usernameInput.value
     lockUI()
-    await api.login(username, password)
+    try {
+        await api.login(username, password)
+    } catch (e) {
+        errorOutput.textContent = e.message
+    }
     unlockUI()
 })
 

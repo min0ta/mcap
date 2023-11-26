@@ -23,19 +23,21 @@ class ServerApi {
     }
     /** @param {string} path @param {Object} body */
     #post(path, body) {
+        const b = JSON.stringify(body)
+        console.log(b)
         return fetch(`${this.rootPath}/${path}`, {
             method: "POST",
-            body: JSON.stringify(body)
+            body: b
         })
     }
     #parseError(error) {
-        if (error === this.#errorEnum.ErrorBadQuery) {
-            return new Error(this.#errorEnum.ErrorBadQuery)
+        if (+error === this.#errorEnum.ErrorBadQuery) {
+            return new Error("Неверный запрос!")
         }
-        if (error === this.#errorEnum.ErrorBadLoginOrPassword) {
-            return new Error(this.#errorEnum.ErrorBadLoginOrPassword)
+        if (+error === this.#errorEnum.ErrorBadLoginOrPassword) {
+            return new Error("Неверное имя пользователя или пароль!")
         }
-        return new Error("unknown error")
+        return new Error("Неизвестная ошибка!")
     }
     /** @param {string} username @param {string} password @throws {Error}*/
     async login(username, password) {
@@ -46,4 +48,4 @@ class ServerApi {
     }
 }
 
-const api = new ServerApi("http://localhost:8080")
+const api = new ServerApi("http://localhost/api")

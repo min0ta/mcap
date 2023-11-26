@@ -18,8 +18,8 @@
         <main>
             <div class="wrapperr">
                 <form>
-                    <!-- evil hack to override default enter submitting by browser -->
                     <h1>Login</h1>
+                    <!-- evil hack to override default enter submitting by browser -->
                     <button disabled style="display: none;"></button>
                     <div class="input-wrapper">
                         <input id="js-username" type="text" placeholder="Введите имя пользователя">
@@ -32,6 +32,7 @@
                             <div id="js-loading" class="hidden"></div>
                         </div>
                     </div>
+                    <p class="error" id="js-errorOutput"></p>
                 </form>
             </div>
         </main>

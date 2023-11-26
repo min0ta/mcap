@@ -49,8 +49,8 @@ func HttpError(w http.ResponseWriter, err Err, code int) {
 
 	w.Write([]byte(
 		fmt.Sprintf(
-			`{"err":"%s"}`,
-			New(err).stringified,
+			`{"err":"%v"}`,
+			New(err).err, //.stringified,
 		),
 	))
 }

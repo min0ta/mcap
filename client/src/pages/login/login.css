@@ -81,6 +81,10 @@ h1 {
     width: 30px;
     height: 30px;
 }
+.error {
+    color: red;
+    width: 60%;
+}
 @media (max-width: 1000px) {
     form {
         width: clamp(200px, 85%, 800px);
