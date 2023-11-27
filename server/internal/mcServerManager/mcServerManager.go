@@ -3,7 +3,19 @@ package mcservermanager
 import (
 	"os"
 	"os/exec"
+	"runtime"
 )
+
+func init() {
+	if runtime.GOOS == "windows" {
+		// windows fallback to sigkill
+		signal = os.Kill
+		return
+	}
+	signal = os.Interrupt
+}
+
+var signal os.Signal
 
 type MinecraftServer struct {
 	path string
@@ -21,8 +33,7 @@ func (m *MinecraftServer) Start(args ...string) error {
 }
 
 func (m *MinecraftServer) Stop() error {
-	// m.proc.Release()
-	err := m.proc.Signal(os.Interrupt)
+	err := m.proc.Signal(signal)
 	if err != nil {
 		return err
 	}

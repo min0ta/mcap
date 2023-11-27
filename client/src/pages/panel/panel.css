@@ -1,35 +1,9 @@
 :root {
-    --header-color: #2b3771;
-    --header-text-color: #d4d9f7;
-
     /*hue*/
     --server-toggle-enabled: 125;
     --server-toggle-disabled: 5;
 }
 
-header {
-    width: 100%;
-    height: 60px;
-    background-color: var(--header-color);
-    display: flex;
-    align-items: center;
-}
-
-footer {
-    width: 100%;
-    height: 30px;
-    background-color: black;
-}
-.header-caption {
-    color: var(--header-text-color);
-    font-size: 28px;
-    padding-left: 15px;
-}
-
-.exit {
-    margin-left: 15px;
-    background-image: url("assets/exit.svg");
-}
 .control-wrapper {
     margin-top: 3vh;
     width: min(800px, 80%);

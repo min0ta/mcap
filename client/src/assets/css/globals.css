@@ -8,6 +8,28 @@
     font-family: 'Roboto', sans-serif;
 }
 
+:root {
+    --header-color: #2b3771;
+    --header-text-color: #d4d9f7;
+}
+
+
+footer {
+    width: 100%;
+    height: 30px;
+    background-color: black;
+}
+.header-caption {
+    color: var(--header-text-color);
+    font-size: 28px;
+    padding-left: 15px;
+}
+.exit {
+    margin-left: 15px;
+    background-image: url("../icons/exit.svg");
+}
+
+
 body {
     height: 100vh;
     height: 100svh;
@@ -34,6 +56,14 @@ main {
 
 .hidden {
     display: none;
+}
+
+header {
+    width: 100%;
+    height: 60px;
+    background-color: var(--header-color);
+    display: flex;
+    align-items: center;
 }
 
 .loading {
