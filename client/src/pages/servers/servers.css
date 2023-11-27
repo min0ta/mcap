@@ -11,21 +11,33 @@ li {
     list-style: none;
     width: clamp(180px,70vw,540px);
     padding: 5px 15px;
-    background-color: #c1c0ca;
     border-radius: 15px;
-    border: 2px gray solid;
+    border: 2px #474747 solid;
     margin-top: 15px;
+    background-position: 0px 100% !important;
+    background-size: 10px 200% !important;
+}
+
+.players {
+    font-weight: 600;
+    font-size: 18px;
 }
 
 .online {
-    border-bottom: 5px green solid;
+    background: linear-gradient(#61d161 20%, #99ff99, #61d161 80%);
 }
 .offline {
-    border-bottom: 5px red solid;
+    background: linear-gradient(#d16161 20%, #ff9999, #d16161 80%);
+}
+li:hover {
+    background-position: 0px 0px !important;
+    transition: 250ms ease !important;
 }
 a {
     width: 100%;
     height: 100%;
     text-decoration: none;
-    color: gray;
+    color: #474747;
+    display: flex;
+    justify-content: space-between;
 }

@@ -4,13 +4,24 @@ const serversArray = gid("js-serversArray")
 
 
 // a lot of magic...
-function serverRecord(serverName, href, version, online) {
+function serverRecord(serverName, href, version, online, playersCount) {
     /*** @type {HTMLLIElement}*/
-    const template = parser.parseFromString(`<li><a href="#"><h2></h2><h4></h4></a></li>`, "text/html").body.children[0]
+    const template = parser.parseFromString(`
+    <li>
+        <a href="#">
+            <div>
+                <h2></h2>
+                <h4></h4>
+            </div>
+            <div class="players"></div>
+        </a>
+    </li>
+    `, "text/html").body.children[0]
     template.children[0].href = href
-    template.children[0].children[0].textContent = serverName
-    template.children[0].children[1].textContent = version
+    template.children[0].children[0].children[0].textContent = serverName
+    template.children[0].children[0].children[1].textContent = version
     template.classList.add(online ? "online" : "offline")
+    template.children[0].children[1].textContent = playersCount
     return template
 }
 /**
@@ -18,19 +29,21 @@ function serverRecord(serverName, href, version, online) {
  * @param {string} href
  * @param {string} version
  * @param {boolean} online
+ * @param {number} playersCount 
  */
-function push(serverName, href, version, online) {
+function push(serverName, href, version, online, playersCount) {
     serversArray.append(
         serverRecord(
             serverName,
             href,
             version,
-            online
+            online,
+            playersCount
         )
     )
 }
 
-push("skywars", "/", "1.8.8", false)
-push("bedwars", "/", "1.15.2", false)
-push("survival", "/", "1.20.2", true)
+push("skywars", "/", "1.8.8", false, 10)
+push("bedwars", "/", "1.15.2", false, 0)
+push("survival", "/", "1.20.2", true, 3)
 
