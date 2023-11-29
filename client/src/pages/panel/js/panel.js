@@ -23,21 +23,19 @@ function setServerState({serverState, oldServerStateClass, newServerStateClass, 
     serverToggleButton.textContent = buttonText
     serverToggleButton.classList.replace(buttonOldClass, buttonNewClass)
 }
-
-function toggleServerState() {
-    if (state.isServerOnline) {
-        setServerState({
-            serverState: false, 
-            oldServerStateClass: "server-state-enabled", 
-            newServerStateClass: "server-state-disabled", 
-            barIconSrc: "./assets/offline.svg", 
-            barText:"Выключен", 
-            buttonText: "Запустить", 
-            buttonOldClass: "server-toggle-disabled", 
-            buttonNewClass: "server-toggle-enabled"
-        })
-        return 
-    }
+/** @param {boolean} state */
+function setServerState(state) {
+    state ?
+    setServerState({
+        serverState: false, 
+        oldServerStateClass: "server-state-enabled", 
+        newServerStateClass: "server-state-disabled", 
+        barIconSrc: "./assets/offline.svg", 
+        barText:"Выключен", 
+        buttonText: "Запустить", 
+        buttonOldClass: "server-toggle-disabled", 
+        buttonNewClass: "server-toggle-enabled"
+    }) :
     setServerState({
         serverState: true, 
         oldServerStateClass: "server-state-disabled", 
@@ -57,8 +55,4 @@ function lockUI() {
 function unlockUI() {
     state.isUILocked = false
     serverToggleButton.disabled = false
-}
-
-function updateServerState() {
-    toggleServerState()
 }

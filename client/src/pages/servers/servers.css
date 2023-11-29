@@ -12,10 +12,11 @@ li {
     width: clamp(180px,70vw,540px);
     padding: 5px 15px;
     border-radius: 15px;
-    border: 2px #474747 solid;
+    border: 2px #747474 solid;
     margin-top: 15px;
     background-position: 0px 100% !important;
     background-size: 10px 200% !important;
+    transition: 250ms ease;
 }
 
 .players {
@@ -24,14 +25,13 @@ li {
 }
 
 .online {
-    background: linear-gradient(#61d161 20%, #99ff99, #61d161 80%);
+    background: linear-gradient(#757575 -30%, #4dff4d, #757575 130%);
 }
 .offline {
-    background: linear-gradient(#d16161 20%, #ff9999, #d16161 80%);
+    background: linear-gradient(#757575 -30%, #ff4d4d, #757575 130%);
 }
 li:hover {
     background-position: 0px 0px !important;
-    transition: 250ms ease !important;
 }
 a {
     width: 100%;

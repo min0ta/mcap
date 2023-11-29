@@ -43,7 +43,7 @@ function push(serverName, href, version, online, playersCount) {
     )
 }
 
-push("skywars", "/", "1.8.8", false, 10)
+push("skywars", "/", "1.8.8", true, 10)
 push("bedwars", "/", "1.15.2", false, 0)
 push("survival", "/", "1.20.2", true, 3)
 
