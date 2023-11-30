@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"log"
 	"mcap/internal/api"
 	"mcap/internal/config"
@@ -18,7 +17,6 @@ var (
 )
 
 func main() {
-	fmt.Println("test")
 	flag.Parse()
 
 	cfg := config.New()

@@ -2,7 +2,6 @@ package api
 
 import (
 	"fmt"
-	"io"
 	"mcap/internal/auth"
 	"mcap/internal/config"
 	"mcap/internal/log"
@@ -31,11 +30,6 @@ func (s *ApiServer) Start() error {
 }
 
 func (s *ApiServer) configureRouter() {
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		io.WriteString(w, "listenin'...")
-		w.WriteHeader(404)
-		fmt.Println("access ", r.URL)
-	})
 	http.HandleFunc("/login", s.authorization.Authorize)
 	http.HandleFunc("/test", s.authorization.TestIfAuth)
 }
