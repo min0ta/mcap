@@ -1,17 +1,17 @@
 [
     {
-        "username":"example1",
-        "password":"123123",
+        "username":"check",
+        "password":"check",
         "role": 0
     },
     {
-        "username":"example2",
-        "password":"123123",
+        "username":"kaboom",
+        "password":"yes",
         "role": 1
     },
     {
-        "username":"example3",
-        "password":"123123",
+        "username":"lemon857",
+        "password":"poiu09",
         "role": 2
     }
 ]
