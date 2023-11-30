@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"mcap/internal/auth"
 	"mcap/internal/config"
 	"mcap/internal/log"
@@ -21,6 +22,7 @@ func New(config *config.Config) *ApiServer {
 }
 
 func (s *ApiServer) Start() error {
+	fmt.Println("server running at port ", s.cfg.SERVER_PORT)
 	s.authorization = auth.New(s.cfg, s.logger)
 	s.configureRouter()
 	s.logger.WriteString("server started")
