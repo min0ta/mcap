@@ -1,0 +1,96 @@
+main {
+    width: 100%;
+}
+
+.wrapperr {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.input-wrapper {
+    margin-top: 25%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+input {
+    border-radius: 15px;
+    background-color: #444444;
+    margin: 10px 0;
+    padding: 10px;
+    width: 100%;
+    color: #e2e2e2;
+    border: 3px #b1b1b1 solid;
+}
+input:focus {
+    box-shadow: 0 0 5px #fff;
+}
+button[type="submit"] {
+    border-radius: 5px;
+    background-color: #ffffff35;
+}
+button[type="submit"]:active {
+    background-color: #ffffff25;
+}
+.swrapper {
+    width: 100%;
+    display: flex;
+    justify-content: right;
+}
+form {
+    width: clamp(200px, 30%, 400px);
+    height: clamp(300px, 40%, 400px);
+    background-color: #ffffff15;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.login {
+    background: url(./assets/login.svg);
+    background-repeat: no-repeat;
+}
+.flex {
+    display: flex;
+    align-items: center;
+}
+.flex input {
+    width: calc(100% - 35px);
+    margin-right: 5px;
+}
+h1 {
+    font-size: 24px;
+    color: #d4d4d4;
+    margin-top: 15px;
+}
+
+.eyex {
+    background: url("./assets/eyex.svg");
+}
+
+.eye {
+    background: url("./assets/eye.svg");
+}
+
+.icon {
+    width: 30px;
+    height: 30px;
+}
+.error {
+    color: red;
+    width: 60%;
+}
+@media (max-width: 1000px) {
+    form {
+        width: clamp(200px, 85%, 800px);
+        height: clamp(300px, 40%, 800px);
+    }
+    input {
+        padding: 15px;
+    }
+}
