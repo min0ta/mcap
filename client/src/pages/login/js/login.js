@@ -39,6 +39,12 @@ submitButton.addEventListener("click", async e => {
     e.preventDefault()
     const password = passwordInput.value
     const username = usernameInput.value
+
+    if (password.trim() === "" || username.trim() === "") {
+        errorOutput.textContent = "Пароль или имя пользователя не могут быть пустыми"
+        return
+    }
+    
     lockUI()
     try {
         await api.login(username, password)
