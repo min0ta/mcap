@@ -22,18 +22,18 @@ const (
 )
 
 type Authoriztaion struct {
-	db  *JsonDB
-	cfg *config.Config
-	// logger *log.Logger
+	db     *JsonDB
+	cfg    *config.Config
+	logger *log.Logger
 }
 
 type Role int
 
 func New(cfg *config.Config, logger *log.Logger) *Authoriztaion {
 	a := &Authoriztaion{
-		cfg: cfg,
-		db:  newJsonDb(),
-		// logger: ,
+		cfg:    cfg,
+		db:     newJsonDb(),
+		logger: logger,
 	}
 	a.db.Connect(cfg.PATH_TO_JSON_DB)
 	return a
@@ -46,6 +46,7 @@ func (s *Authoriztaion) Authorize(w http.ResponseWriter, r *http.Request) {
 	query := AuthoriztaionQuery{}
 	err := utils.ReadJson(r, &query)
 	if err != nil {
+		s.logger.WriteFormat("INVALID QUERY! REQUEST FROM IP: %s", r.RemoteAddr)
 		errors.HttpError(w, errors.ErrorInvalidQuery, 400)
 		return
 	}
@@ -55,6 +56,7 @@ func (s *Authoriztaion) Authorize(w http.ResponseWriter, r *http.Request) {
 
 	err = s.setJwtToken(role, w)
 	if err != nil {
+		s.logger.WriteFormat("ACCESS DENY! REQUEST FROM IP: %s", r.RemoteAddr)
 		errors.HttpError(w, errors.ErrorBadLoginOrPassword, 400)
 		return
 	}
@@ -62,12 +64,12 @@ func (s *Authoriztaion) Authorize(w http.ResponseWriter, r *http.Request) {
 		utils.WriteResult(w, utils.Response{"succes": true}, 200)
 		return
 	}
+	s.logger.WriteFormat("ACCESS DENY! REQUEST FROM IP: %s", r.RemoteAddr)
 	errors.HttpError(w, errors.ErrorBadLoginOrPassword, 401)
 }
 
 func (s *Authoriztaion) TestIfAuth(w http.ResponseWriter, r *http.Request) {
 	role := s.AuthCheck(r)
-
 	if role == RoleAdmin {
 		io.WriteString(w, "Admin")
 		return
@@ -95,6 +97,7 @@ func (s *Authoriztaion) Unauthorize(w http.ResponseWriter, r *http.Request) {
 func (s *Authoriztaion) AuthCheck(r *http.Request) Role {
 	cookie, err := r.Cookie(cookieName)
 	if err != nil {
+		s.logger.WriteFormat("ACCESS DENY! REQUEST FROM IP: %s", r.RemoteAddr)
 		return RoleGuest
 	}
 	unparsedToken := cookie.Value
@@ -103,15 +106,12 @@ func (s *Authoriztaion) AuthCheck(r *http.Request) Role {
 		return []byte(s.cfg.JWT_SIGNING_KEY), nil
 	})
 	if err != nil {
-		// s.logger.WriteFormat("ACCESS DENY! REQUEST FROM IP: %s", r.RemoteAddr)
-		fmt.Println("access deny")
+		s.logger.WriteFormat("ACCESS DENY! REQUEST FROM IP: %s", r.RemoteAddr)
 		return RoleGuest
 	}
 	roleStr, err := token.Claims.GetSubject()
 	if err != nil {
-		// s.logger.WriteFormat("ACCESS DENY! REQUEST FROM IP: %s", r.RemoteAddr)
-		fmt.Println("access deny")
-
+		s.logger.WriteFormat("ACCESS DENY! REQUEST FROM IP: %s", r.RemoteAddr)
 		return RoleGuest
 	}
 	role, _ := strconv.ParseInt(roleStr, 10, 32)
@@ -121,9 +121,7 @@ func (s *Authoriztaion) AuthCheck(r *http.Request) Role {
 	if role == RoleAdmin {
 		return RoleAdmin
 	}
-
-	// s.logger.WriteFormat("ACCESS DENY! REQUEST FROM IP: %s", r.RemoteAddr)
-	fmt.Println("access deny")
+	s.logger.WriteFormat("ACCESS DENY! REQUEST FROM IP: %s", r.RemoteAddr)
 
 	return RoleGuest
 }

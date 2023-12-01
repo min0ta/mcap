@@ -5,10 +5,6 @@ const state = {
     isUiLocked: false
 }
 
-const loadHref = (s) => {
-    window.location.href = s
-}
-
 /*** @type {HTMLInputElement} */
 const passwordInput = gid("js-password")
 passwordLookup.addEventListener("click", e => {
@@ -50,9 +46,11 @@ submitButton.addEventListener("click", async e => {
         await api.login(username, password)
     } catch (e) {
         errorOutput.textContent = e.message
+        unlockUI()
+        return
     }
     unlockUI()
-    loadHref("/servers/servers")
+    window.location.href = "/servers/servers"
 })
 
 const loadingEl = gid("js-loading")
