@@ -5,6 +5,10 @@ const state = {
     isUiLocked: false
 }
 
+const loadHref = (s) => {
+    window.location.href = s
+}
+
 /*** @type {HTMLInputElement} */
 const passwordInput = gid("js-password")
 passwordLookup.addEventListener("click", e => {
@@ -28,6 +32,7 @@ const usernameInput = gid("js-username")
 /** @type {HTMLParagraphElement} */
 const errorOutput = gid("js-errorOutput")
 submitButton.addEventListener("click", async e => {
+    errorOutput.textContent = ""
     if (state.isUiLocked) {
         return
     }
@@ -41,6 +46,7 @@ submitButton.addEventListener("click", async e => {
         errorOutput.textContent = e.message
     }
     unlockUI()
+    loadHref("/servers/servers")
 })
 
 const loadingEl = gid("js-loading")
