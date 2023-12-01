@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -24,9 +25,10 @@ type Logger struct {
 	Close    func() error // only for sigterm/sigstop handling
 }
 
-func New(mode LoggerMode, filepath string) *Logger {
+func New(logMode string, filepath string) *Logger {
 	var out func(a any) error
 	var close func() error
+	mode := parseCfgFileMode(logMode)
 	switch mode {
 
 	case FileMode:
@@ -95,4 +97,19 @@ func createFileLogger(loggerPath string) (func(a any) error, func() error) {
 		file.WriteString("---\n" + string(json) + "\n" + time.Now().String() + "\n---\n\n")
 		return nil
 	}, file.Close
+}
+
+func parseCfgFileMode(s string) LoggerMode {
+	l := strings.ToLower(s)
+	if l == "both" {
+		return BothMode
+	}
+	if l == "file" {
+		return FileMode
+	}
+	if l == "console" {
+		return ConsoleMode
+	}
+	fmt.Println("WARN: unrecognized logging mode. Console logging mode picked by default")
+	return ConsoleMode
 }

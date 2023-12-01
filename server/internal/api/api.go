@@ -16,7 +16,7 @@ type ApiServer struct {
 func New(config *config.Config) *ApiServer {
 	return &ApiServer{
 		cfg:    config,
-		logger: log.New(log.BothMode, "server.log"),
+		logger: log.New(config.LOG_MODE, config.LOG_FILE),
 	}
 }
 
@@ -29,5 +29,7 @@ func (s *ApiServer) Start() error {
 
 func (s *ApiServer) configureRouter() {
 	http.HandleFunc("/login", s.authorization.Authorize)
-	http.HandleFunc("/test", s.authorization.TestIfAuth)
+	if s.cfg.TEST_ROUTE {
+		http.HandleFunc("/test", s.authorization.TestIfAuth)
+	}
 }

@@ -11,6 +11,9 @@ type Config struct {
 	JWT_SIGNING_KEY string
 	JWT_EXPIRES     uint
 	PATH_TO_JSON_DB string
+	LOG_MODE        string
+	LOG_FILE        string
+	TEST_ROUTE      bool
 }
 
 func New() *Config {
@@ -19,6 +22,9 @@ func New() *Config {
 		JWT_SIGNING_KEY: "jwt signing key! should be random string of characters!",
 		JWT_EXPIRES:     86400,
 		PATH_TO_JSON_DB: "./config/db.json",
+		LOG_MODE:        "both",
+		LOG_FILE:        "server.log",
+		TEST_ROUTE:      true,
 	}
 }
 

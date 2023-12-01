@@ -2,5 +2,8 @@
     "SERVER_PORT":":8080",
     "JWT_SIGNING_KEY":"zdfg^T328jgdfghh4344JyhrbyuT^*%^&512d6y3fdSa",
     "JWT_EXPIRES":86400,
-    "PATH_TO_JSON_DB": "./config/db.json"
+    "PATH_TO_JSON_DB": "./config/db.json",
+    "LOG_FILE":"server.log",
+    "LOG_MODE":"both",
+    "TEST_ROUTE": true
 }
