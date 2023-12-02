@@ -5,5 +5,7 @@
     "PATH_TO_JSON_DB": "./config/db.json",
     "LOG_FILE":"server.log",
     "LOG_MODE":"both",
-    "TEST_ROUTE": true
+    "TEST_ROUTE": true,
+    "RCON_ADDRESS":"nomeg.ru:25569",
+    "RCON_PASSWORD":"123test123"
 }

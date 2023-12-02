@@ -1,18 +1,25 @@
 package rcon
 
-import "github.com/gorcon/rcon"
+import (
+	"mcap/internal/config"
+
+	"github.com/gorcon/rcon"
+)
 
 type RconClient struct {
 	conn *rcon.Conn
+	cfg  *config.Config
 }
 
-func New() *RconClient {
-	return &RconClient{}
+func New(c *config.Config) *RconClient {
+	return &RconClient{
+		cfg: c,
+	}
 }
 
 func (r *RconClient) Dial() error {
 	var err error
-	r.conn, err = rcon.Dial("nomeg.ru:25569", "123test123")
+	r.conn, err = rcon.Dial(r.cfg.RCON_ADDRESS, r.cfg.RCON_PASSWORD)
 	if err != nil {
 		return err
 	}
