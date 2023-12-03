@@ -56,7 +56,7 @@ func (s *Authoriztaion) Authorize(w http.ResponseWriter, r *http.Request) {
 
 	err = s.setJwtToken(role, w)
 	if err != nil {
-		s.logger.WriteFormat("ACCESS DENY! REQUEST FROM IP: %s", r.RemoteAddr)
+		s.logAccessDenying(r.RemoteAddr)
 		errors.HttpError(w, errors.ErrorBadLoginOrPassword, 400)
 		return
 	}
@@ -64,7 +64,7 @@ func (s *Authoriztaion) Authorize(w http.ResponseWriter, r *http.Request) {
 		utils.WriteResult(w, utils.Response{"succes": true}, 200)
 		return
 	}
-	s.logger.WriteFormat("ACCESS DENY! REQUEST FROM IP: %s", r.RemoteAddr)
+	s.logAccessDenying(r.RemoteAddr)
 	errors.HttpError(w, errors.ErrorBadLoginOrPassword, 401)
 }
 
@@ -97,7 +97,7 @@ func (s *Authoriztaion) Unauthorize(w http.ResponseWriter, r *http.Request) {
 func (s *Authoriztaion) AuthCheck(r *http.Request) Role {
 	cookie, err := r.Cookie(cookieName)
 	if err != nil {
-		s.logger.WriteFormat("ACCESS DENY! REQUEST FROM IP: %s", r.RemoteAddr)
+		s.logAccessDenying(r.RemoteAddr)
 		return RoleGuest
 	}
 	unparsedToken := cookie.Value
@@ -106,12 +106,12 @@ func (s *Authoriztaion) AuthCheck(r *http.Request) Role {
 		return []byte(s.cfg.JWT_SIGNING_KEY), nil
 	})
 	if err != nil {
-		s.logger.WriteFormat("ACCESS DENY! REQUEST FROM IP: %s", r.RemoteAddr)
+		s.logAccessDenying(r.RemoteAddr)
 		return RoleGuest
 	}
 	roleStr, err := token.Claims.GetSubject()
 	if err != nil {
-		s.logger.WriteFormat("ACCESS DENY! REQUEST FROM IP: %s", r.RemoteAddr)
+		s.logAccessDenying(r.RemoteAddr)
 		return RoleGuest
 	}
 	role, _ := strconv.ParseInt(roleStr, 10, 32)
@@ -121,7 +121,7 @@ func (s *Authoriztaion) AuthCheck(r *http.Request) Role {
 	if role == RoleAdmin {
 		return RoleAdmin
 	}
-	s.logger.WriteFormat("ACCESS DENY! REQUEST FROM IP: %s", r.RemoteAddr)
+	s.logAccessDenying(r.RemoteAddr)
 
 	return RoleGuest
 }
@@ -153,4 +153,8 @@ func (s *Authoriztaion) setJwtToken(role Role, w http.ResponseWriter) error {
 	http.SetCookie(w, cookie)
 
 	return nil
+}
+
+func (a *Authoriztaion) logAccessDenying(ip string) {
+	a.logger.WriteFormat("ACCESS DENY! REQUEST FROM IP: %s", ip)
 }

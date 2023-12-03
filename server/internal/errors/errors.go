@@ -10,6 +10,8 @@ type Err = uint16
 const (
 	ErrorInvalidQuery uint16 = iota
 	ErrorBadLoginOrPassword
+	ErrorUnauthorized
+	ErrorCannotAccessRcon
 )
 
 type McapError struct {
