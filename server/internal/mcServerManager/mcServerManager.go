@@ -20,22 +20,42 @@ var signal os.Signal
 type MinecraftServer struct {
 	path string
 	proc *os.Process
+	logs chan string
 }
 
 func (m *MinecraftServer) Start(args ...string) error {
 	cmd := exec.Command("./"+m.path, args...)
-	err := cmd.Run()
-	if err != nil {
-		return err
-	}
 	m.proc = cmd.Process
-	return nil
+	ch := make(chan string)
+	m.logs = ch
+
+	logReader := &StringReader{
+		OutputBroadcast: ch,
+	}
+	cmd.Stdout = logReader
+	cmd.Stderr = logReader
+	return cmd.Start()
+}
+
+/* BLOCKING! use only in goroutines*/
+func (m *MinecraftServer) ReadLogs() string {
+	return <-m.logs
 }
 
 func (m *MinecraftServer) Stop() error {
-	err := m.proc.Signal(signal)
-	if err != nil {
-		return err
-	}
-	return nil
+	return m.proc.Signal(signal)
+}
+
+func writeS(s string, c chan string) {
+	c <- s
+}
+
+type StringReader struct {
+	OutputBroadcast chan string
+}
+
+func (sr *StringReader) Write(p []byte) (n int, err error) {
+	s := string(p)
+	go writeS(s, sr.OutputBroadcast)
+	return len(p), nil
 }
