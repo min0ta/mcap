@@ -1,6 +1,6 @@
 :root {
     /*hue*/
-    --server-toggle-enabled: 125;
+    --server-toggle-enabled: 200;
     --server-toggle-disabled: 5;
 }
 
@@ -31,11 +31,11 @@
 }
 
 .server-state-disabled {
-    background-color: #a3191b;
+    background-color: #b53335;
 }
 
 .server-state-enabled {
-    background-color: #22994a;
+    background-color: #229952;
 }
 
 main {
@@ -60,7 +60,7 @@ main {
 }
 
 .server-toggle-disabled {
-    background: linear-gradient(0.45turn, hsl(var(--server-toggle-disabled), 75%, 45%), hsl(var(--server-toggle-disabled), 65%, 60%));
+    background: linear-gradient(0.45turn, hsl(var(--server-toggle-disabled), 55%, 60%), hsl(var(--server-toggle-disabled), 45%, 50%));
 }
 
 button[disabled] {
