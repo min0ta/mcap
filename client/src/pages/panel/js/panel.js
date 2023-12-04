@@ -56,3 +56,17 @@ function unlockUI() {
     state.isUILocked = false
     serverToggleButton.disabled = false
 }
+function parseParams() {
+    let get = window.location.search
+    if (get === '') {
+        return {}
+    }
+    const map = {}
+    get = get.substring(1)
+    let queries = get.split("&")
+    for (let i = 0; i<queries.length; i++) {
+        let kv = queries[i].split("=")
+        map[kv[0]] = kv[1]
+    }
+    return map
+}

@@ -15,8 +15,6 @@ type Config struct {
 	LOG_MODE        string
 	LOG_FILE        string
 	TEST_ROUTE      bool
-	RCON_ADDRESS    string
-	RCON_PASSWORD   string
 }
 
 func New() *Config {
@@ -28,8 +26,6 @@ func New() *Config {
 		LOG_MODE:        "both",
 		LOG_FILE:        "server.log",
 		TEST_ROUTE:      true,
-		RCON_ADDRESS:    "put your rcon address here",
-		RCON_PASSWORD:   "put your rcon password here",
 	}
 }
 
