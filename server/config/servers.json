@@ -1,0 +1,10 @@
+[
+    {
+        "name":"skywars",
+        "runCommand":"./servers/skywars",
+        "address":"example.com",
+        "port":"2017",
+        "rconAddress":"test.example",
+        "rconPwd":"123123"
+    }
+]

@@ -85,3 +85,12 @@ func RequireFile(filepath string) []byte {
 	}
 	return file
 }
+
+func Find[T comparable](arr []T, predicate func(T) bool) int {
+	for k := range arr {
+		if predicate(arr[k]) {
+			return k
+		}
+	}
+	return -1
+}

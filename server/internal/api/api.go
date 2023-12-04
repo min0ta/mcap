@@ -5,7 +5,7 @@ import (
 	"mcap/internal/config"
 	"mcap/internal/errors"
 	"mcap/internal/log"
-	"mcap/internal/rcon"
+	mcservermanager "mcap/internal/mcServerManager"
 	"mcap/internal/utils"
 	"net/http"
 )
@@ -14,7 +14,7 @@ type ApiServer struct {
 	cfg           *config.Config
 	authorization *auth.Authoriztaion
 	logger        *log.Logger
-	rcon          *rcon.RconClient
+	mcServers     []*mcservermanager.MinecraftServer
 }
 
 func New(config *config.Config) *ApiServer {
@@ -27,11 +27,6 @@ func New(config *config.Config) *ApiServer {
 func (s *ApiServer) Start() error {
 	s.authorization = auth.New(s.cfg, s.logger)
 	s.configureRouter()
-	_rcon := rcon.New(s.cfg)
-	err := _rcon.Dial()
-	if err != nil {
-		s.logger.WriteFormat("cannot connect to rcon with error %v", err)
-	}
 	s.logger.WriteFormat("server started at port %s", s.cfg.SERVER_PORT)
 	return http.ListenAndServe(s.cfg.SERVER_PORT, nil)
 }
@@ -45,6 +40,7 @@ func (s *ApiServer) configureRouter() {
 }
 
 type execQuery struct {
+	Server  string `json:"server"`
 	Command string `json:"command"`
 }
 
@@ -61,7 +57,14 @@ func (s *ApiServer) execRcon(w http.ResponseWriter, r *http.Request) {
 		errors.HttpError(w, errors.ErrorInvalidQuery, 400)
 		return
 	}
-	res, err := s.rcon.Exec(q.Command)
+	serverIndex := utils.Find(s.mcServers, func(ms *mcservermanager.MinecraftServer) bool {
+		return ms.Config.Name == q.Server
+	})
+	if serverIndex == -1 {
+		errors.HttpError(w, errors.ErrorInvalidQuery, 400)
+		return
+	}
+	res, err := s.mcServers[serverIndex].Rcon.Exec(q.Command)
 	if err != nil {
 		errors.HttpError(w, errors.ErrorCannotAccessRcon, 500)
 		return

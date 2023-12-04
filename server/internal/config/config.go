@@ -44,6 +44,7 @@ func (cfg *Config) ReadJsonConfig(path string) {
 		if err != nil {
 			log.Fatal("cannot create config file", err)
 		}
+		defer file.Close()
 		__json, err := json.Marshal(cfg)
 		if err != nil {
 			log.Fatal("cannot marshal cfg ", err)

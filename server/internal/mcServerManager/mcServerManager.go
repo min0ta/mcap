@@ -1,6 +1,7 @@
 package mcservermanager
 
 import (
+	"mcap/internal/rcon"
 	"os"
 	"os/exec"
 	"runtime"
@@ -18,17 +19,26 @@ func init() {
 var signal os.Signal
 
 type MinecraftServer struct {
-	path string
-	proc *os.Process
-	logs chan string
+	Config *ServerConfig
+	proc   *os.Process
+	logs   chan string
+	Rcon   *rcon.RconClient
+}
+
+func New(s *ServerConfig) *MinecraftServer {
+	rcon := rcon.New(s.Address, s.Name)
+	return &MinecraftServer{
+		Config: s,
+		Rcon:   rcon,
+	}
 }
 
 func (m *MinecraftServer) Start(args ...string) error {
-	cmd := exec.Command("./"+m.path, args...)
+	cmd := exec.Command(m.Config.RunCommand, args...)
 	m.proc = cmd.Process
 	ch := make(chan string)
 	m.logs = ch
-
+	m.Rcon.Dial()
 	logReader := &StringReader{
 		OutputBroadcast: ch,
 	}
