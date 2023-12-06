@@ -40,6 +40,7 @@ func (s *ApiServer) Start() error {
 
 func (s *ApiServer) configureRouter() {
 	http.HandleFunc("/login", s.authorization.Authorize)
+	http.HandleFunc("/servers", s.showServers)
 	if s.cfg.TEST_ROUTE {
 		http.HandleFunc("/test", s.authorization.TestIfAuth)
 		http.HandleFunc("/rcon", s.execRcon)
@@ -116,5 +117,30 @@ func (s *ApiServer) startServer(w http.ResponseWriter, r *http.Request) {
 	}
 	utils.WriteResult(w, utils.Response{
 		"success": true,
+	}, 200)
+}
+
+type serversListResponse struct {
+	name    string
+	address string
+	port    string
+}
+
+func (s *ApiServer) showServers(w http.ResponseWriter, r *http.Request) {
+	role := s.authorization.AuthCheck(r)
+	if role == auth.RoleGuest {
+		errors.HttpError(w, errors.ErrorUnauthorized, 401)
+		return
+	}
+	var displayServers []serversListResponse
+	for i := range s.mcServers {
+		displayServers = append(displayServers, serversListResponse{
+			name:    s.mcServers[i].Config.Name,
+			address: s.mcServers[i].Config.Address,
+			port:    s.mcServers[i].Config.Port,
+		})
+	}
+	utils.WriteResult(w, utils.Response{
+		"list": displayServers,
 	}, 200)
 }
