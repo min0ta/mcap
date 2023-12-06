@@ -12,6 +12,7 @@ const (
 	ErrorBadLoginOrPassword
 	ErrorUnauthorized
 	ErrorCannotAccessRcon
+	ErrorCannotStartMcServer
 )
 
 type McapError struct {
