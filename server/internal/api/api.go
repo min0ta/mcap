@@ -53,10 +53,6 @@ type execQuery struct {
 	Command string `json:"command"`
 }
 
-type serverStartQuery struct {
-	Server string `json:"server"`
-}
-
 func (s *ApiServer) execRcon(w http.ResponseWriter, r *http.Request) {
 	role := s.authorization.AuthCheck(r)
 	if role != auth.RoleAdmin {
@@ -90,6 +86,10 @@ func (s *ApiServer) execRcon(w http.ResponseWriter, r *http.Request) {
 	}, 200)
 }
 
+type serverStartQuery struct {
+	Server string `json:"server"`
+}
+
 func (s *ApiServer) startServer(w http.ResponseWriter, r *http.Request) {
 	role := s.authorization.AuthCheck(r)
 	if role == auth.RoleGuest {
@@ -121,9 +121,9 @@ func (s *ApiServer) startServer(w http.ResponseWriter, r *http.Request) {
 }
 
 type serversListResponse struct {
-	name    string
-	address string
-	port    string
+	Name    string `json:"name"`
+	Address string `json:"address"`
+	Port    string `json:"port"`
 }
 
 func (s *ApiServer) showServers(w http.ResponseWriter, r *http.Request) {
@@ -135,9 +135,9 @@ func (s *ApiServer) showServers(w http.ResponseWriter, r *http.Request) {
 	var displayServers []serversListResponse
 	for i := range s.mcServers {
 		displayServers = append(displayServers, serversListResponse{
-			name:    s.mcServers[i].Config.Name,
-			address: s.mcServers[i].Config.Address,
-			port:    s.mcServers[i].Config.Port,
+			Name:    s.mcServers[i].Config.Name,
+			Address: s.mcServers[i].Config.Address,
+			Port:    s.mcServers[i].Config.Port,
 		})
 	}
 	utils.WriteResult(w, utils.Response{

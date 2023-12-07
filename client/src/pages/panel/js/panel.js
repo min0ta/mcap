@@ -1,3 +1,4 @@
+/**@type {HTMLAnchorElement} */
 const state = {
     isServerOnline: false,
     isUILocked: false,

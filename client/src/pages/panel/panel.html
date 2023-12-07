@@ -4,17 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel</title>
-    <link rel="stylesheet" href="../../assets/fonts/Roboto/500.css">
-    <link rel="stylesheet" href="../../assets/css/globals.css">
+    <link immutable rel="stylesheet" href="../../assets/fonts/Roboto/500.css">
+    <link immutable rel="stylesheet" href="../../assets/css/globals.css">
     <link rel="stylesheet" href="panel.css">
 </head>
 <body>
-    <script src="../../assets/js/lib.js"></script>
+    <script immutable src="../../assets/js/lib.js"></script>
     <script src="../../assets/js/core.js" defer></script>
     <script src="js/panel.js" defer></script>
     <div class="wrapper">
         <header>
-            <a href="/servers/servers" class="icon exit"></a>
             <h1 class="header-caption">
                 Admin Panel
             </h1>
@@ -34,7 +33,11 @@
             <button class="server-toggle server-toggle-enabled">
                 Запустить
             </button>
-                <!--
+                <a class="aexit" href="/servers/servers">
+                    <div class="icon exit"></div>
+                    К списку серверов
+                </a>
+            <!--
             </div>
             <div class="rcon-wrapper">
                 <div class="rcon">
