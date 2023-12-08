@@ -7,7 +7,13 @@ function gid(idName) {
     return document.getElementById(idName)
 }
 
-// I WAS DRUNK WHILE DOUNG THIS SHIT SO PLESASE FROGIVE ME
+/**
+ * @param {string} err 
+ */
+function logError(err) {
+    const log = sessionStorage.getItem("errlog") ?? ""
+    sessionStorage.setItem("errlog",`${log}\n${new Date()}: ${err}`)
+}
 class ServerApi {
     /** @type {string} */
     rootPath
@@ -20,6 +26,11 @@ class ServerApi {
         ErrorUnauthorized: 2,
         ErrorCannotAccessRcon: 3,
         ErrorCannotStartMcServer: 4
+    }
+    #assert(predicate, errorCode) {
+        if (!predicate) {
+            throw this.#parseError(errorCode)
+        }
     }
     #parsedErrorArray = ["Неверный запрос!", "Неверный логин или пароль!", "Вы неавторизованы!", "Невозможно получить доступ к RCON!", "Невозможно запустить сервер!"]
     #get(path) {
@@ -39,24 +50,18 @@ class ServerApi {
     /** @param {string} username @param {string} password @throws {Error}*/
     async login(username, password) {
         const q = await (await this.#post("login", {username, password})).json()
-        if (q.err) {
-            throw this.#parseError(q.err)
-        }
+        this.#assert(q.err == null, q.err)
     }
     /**@returns {Promise<{name: string, address: string, port: string}[]>}*/
     async getServerList() {
         const q = await (await this.#get("servers")).json()
-        if (q.err) {
-            throw this.#parseError(q.err)
-        }
+        this.#assert(q.err == null, q.err)
         return q.list
     }
     /**@param {string} server @returns {Promise<{online: boolean, name: string}>} */
     async getServerState(server) {
         const q = await (await this.#post("server", {server})).json()
-        if (q.err) {
-            throw this.#parseError(q.err)
-        }
+        this.#assert(q.err == null, q.err)
         return q
     }
 }

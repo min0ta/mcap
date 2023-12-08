@@ -10,6 +10,9 @@ const serverHeader = gcel("server-name")
 const serverStateElement = gcel("server-state")
 /*** @type {HTMLButtonElement}*/
 const serverToggleButton = gcel("server-toggle")
+
+/** @type {HTMLSpanElement} */
+const errorOutput = gid("js-errout")
 serverHeader.textContent = "<server name>"
 
 /** * @param {{serverState: boolean, oldServerStateClass: string, newServerStateClass: string, barIconSrc: string, barText: string, buttonText: string, buttonOldClass: string, buttonNewClass: string}} param0  */
@@ -72,8 +75,9 @@ function parseParams() {
     return map
 }
 
-function renderError(err) {
-    console.log("error happened")
+function renderError(displayableError, ...err) {
+    logError(err.join(" "))
+    errorOutput.textContent = displayableError
     throw new Error(err)
 }
 
@@ -89,7 +93,7 @@ async function main() {
         updateServerState(info.online)
         serverHeader.textContent = info.name
     } catch (e) {
-        renderError(e)
+        renderError(e, "getServerState() error! server name =",server,"error:", e)
     }
 
     unlockUI()

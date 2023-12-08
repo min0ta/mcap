@@ -42,10 +42,10 @@ func (s *ApiServer) configureRouter() {
 	http.HandleFunc("/login", s.authorization.Authorize)
 	http.HandleFunc("/servers", s.showServers)
 	http.HandleFunc("/start", s.startServer)
+	http.HandleFunc("/server", s.getServer)
 	if s.cfg.TEST_ROUTE {
 		http.HandleFunc("/test", s.authorization.TestIfAuth)
 		http.HandleFunc("/rcon", s.execRcon)
-		http.HandleFunc("/server", s.getServer)
 	}
 }
 
