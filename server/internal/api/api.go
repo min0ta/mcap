@@ -45,6 +45,7 @@ func (s *ApiServer) configureRouter() {
 	if s.cfg.TEST_ROUTE {
 		http.HandleFunc("/test", s.authorization.TestIfAuth)
 		http.HandleFunc("/rcon", s.execRcon)
+		http.HandleFunc("/server", s.getServer)
 	}
 }
 
@@ -122,11 +123,11 @@ func (s *ApiServer) startServer(w http.ResponseWriter, r *http.Request) {
 	}, 200)
 }
 
-// TODO: add online record
 type serversListResponse struct {
 	Name    string `json:"name"`
 	Address string `json:"address"`
 	Port    string `json:"port"`
+	Online  bool   `json:"online"`
 }
 
 func (s *ApiServer) showServers(w http.ResponseWriter, r *http.Request) {
@@ -137,13 +138,40 @@ func (s *ApiServer) showServers(w http.ResponseWriter, r *http.Request) {
 	}
 	var displayServers []serversListResponse
 	for i := range s.mcServers {
+		server := s.mcServers[i].Config
 		displayServers = append(displayServers, serversListResponse{
-			Name:    s.mcServers[i].Config.Name,
-			Address: s.mcServers[i].Config.Address,
-			Port:    s.mcServers[i].Config.Port,
+			Name:    server.Name,
+			Address: server.Address,
+			Port:    server.Port,
+			Online:  s.mcServers[i].IsOnline,
 		})
 	}
 	utils.WriteResult(w, utils.Response{
 		"list": displayServers,
+	}, 200)
+}
+
+func (s *ApiServer) getServer(w http.ResponseWriter, r *http.Request) {
+	role := s.authorization.AuthCheck(r)
+	if role == auth.RoleGuest {
+		errors.HttpError(w, errors.ErrorUnauthorized, 401)
+		return
+	}
+	q := &serverStartQuery{}
+	err := utils.ReadJson(r, q)
+	if err != nil {
+		errors.HttpError(w, errors.ErrorInvalidQuery, 400)
+		return
+	}
+	index := utils.Find(s.mcServers, func(ms *mcservermanager.MinecraftServer) bool {
+		return q.Server == ms.Config.Name
+	})
+	if index == -1 {
+		errors.HttpError(w, errors.ErrorInvalidQuery, 400)
+		return
+	}
+	utils.WriteResult(w, utils.Response{
+		"online": s.mcServers[index].IsOnline,
+		"name":   q.Server,
 	}, 200)
 }

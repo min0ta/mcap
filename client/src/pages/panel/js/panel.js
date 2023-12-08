@@ -1,16 +1,16 @@
-/**@type {HTMLAnchorElement} */
 const state = {
     isServerOnline: false,
     isUILocked: false,
+    serverName: null
 }
 
 /*** @type {HTMLHeadingElement}*/
-const serverName = gcel("server-name")
+const serverHeader = gcel("server-name")
 /*** @type {HTMLDivElement}*/
 const serverStateElement = gcel("server-state")
 /*** @type {HTMLButtonElement}*/
 const serverToggleButton = gcel("server-toggle")
-serverName.textContent = "<server name>"
+serverHeader.textContent = "<server name>"
 
 /** * @param {{serverState: boolean, oldServerStateClass: string, newServerStateClass: string, barIconSrc: string, barText: string, buttonText: string, buttonOldClass: string, buttonNewClass: string}} param0  */
 function setServerState({serverState, oldServerStateClass, newServerStateClass, barIconSrc, barText, buttonText, buttonOldClass, buttonNewClass}) {
@@ -71,3 +71,27 @@ function parseParams() {
     }
     return map
 }
+
+function renderError(err) {
+    console.log("error happened")
+    throw new Error(err)
+}
+
+async function main() {
+    lockUI()
+    const params = parseParams()
+    if (params["server"] == null) {
+        renderError("Сервер не указан!")
+    }
+    const server = params["server"]
+    try {
+        const info = await api.getServerState(server)
+        updateServerState(info.online)
+        serverHeader.textContent = info.name
+    } catch (e) {
+        renderError(e)
+    }
+
+    unlockUI()
+}
+main()

@@ -20,10 +20,11 @@ func init() {
 var signal os.Signal
 
 type MinecraftServer struct {
-	Config *ServerConfig
-	proc   *os.Process
-	logs   chan string
-	Rcon   *rcon.RconClient
+	Config   *ServerConfig
+	proc     *os.Process
+	logs     chan string
+	Rcon     *rcon.RconClient
+	IsOnline bool
 }
 
 func New(s *ServerConfig) *MinecraftServer {
@@ -46,7 +47,12 @@ func (m *MinecraftServer) Start() error {
 	}
 	cmd.Stdout = logReader
 	cmd.Stderr = logReader
-	return cmd.Start()
+	err := cmd.Start()
+	if err != nil {
+		return err
+	}
+	m.IsOnline = true
+	return nil
 }
 
 /* BLOCKING! use only in goroutines*/
@@ -55,6 +61,7 @@ func (m *MinecraftServer) ReadLogs() string {
 }
 
 func (m *MinecraftServer) Stop() error {
+	m.IsOnline = false
 	return m.proc.Signal(signal)
 }
 

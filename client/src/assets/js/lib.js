@@ -28,7 +28,6 @@ class ServerApi {
     /** @param {string} path @param {Object} body */
     #post(path, body) {
         const b = JSON.stringify(body)
-        console.log(b)
         return fetch(`${this.rootPath}/${path}`, {
             method: "POST",
             body: b
@@ -51,6 +50,14 @@ class ServerApi {
             throw this.#parseError(q.err)
         }
         return q.list
+    }
+    /**@param {string} server @returns {Promise<{online: boolean, name: string}>} */
+    async getServerState(server) {
+        const q = await (await this.#post("server", {server})).json()
+        if (q.err) {
+            throw this.#parseError(q.err)
+        }
+        return q
     }
 }
 
