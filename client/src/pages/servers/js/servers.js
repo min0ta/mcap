@@ -42,8 +42,16 @@ function push(serverName, href, version, online, playersCount) {
         )
     )
 }
-
-push("skywars", "/", "1.8.8", true, 10)
-push("bedwars", "/", "1.15.2", false, 0)
-push("survival", "/", "1.20.2", true, 3)
-
+// really hacky thing - should remove it l8r
+(async () => {
+    try {
+        const list = await api.getServerList()
+        for (let i = 0; i<list.length;i++) {
+            const elem = list[i]
+            push(elem.name, `/panel/panel?server=${elem.name}`, "<null>", true, 0)
+        }
+    } catch(e) {
+        console.log(e)
+        serversArray.append("Невозможно получить список серверов с ошибкой", e.toString())
+    }
+})()

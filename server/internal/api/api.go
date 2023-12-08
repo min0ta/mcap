@@ -41,10 +41,10 @@ func (s *ApiServer) Start() error {
 func (s *ApiServer) configureRouter() {
 	http.HandleFunc("/login", s.authorization.Authorize)
 	http.HandleFunc("/servers", s.showServers)
+	http.HandleFunc("/start", s.startServer)
 	if s.cfg.TEST_ROUTE {
 		http.HandleFunc("/test", s.authorization.TestIfAuth)
 		http.HandleFunc("/rcon", s.execRcon)
-		http.HandleFunc("/start", s.startServer)
 	}
 }
 
@@ -122,6 +122,7 @@ func (s *ApiServer) startServer(w http.ResponseWriter, r *http.Request) {
 	}, 200)
 }
 
+// TODO: add online record
 type serversListResponse struct {
 	Name    string `json:"name"`
 	Address string `json:"address"`

@@ -16,8 +16,12 @@ class ServerApi {
     }
     #errorEnum = {
         ErrorBadQuery:0,
-        ErrorBadLoginOrPassword:1
+        ErrorBadLoginOrPassword:1,
+        ErrorUnauthorized: 2,
+        ErrorCannotAccessRcon: 3,
+        ErrorCannotStartMcServer: 4
     }
+    #parsedErrorArray = ["Неверный запрос!", "Неверный логин или пароль!", "Вы неавторизованы!", "Невозможно получить доступ к RCON!", "Невозможно запустить сервер!"]
     #get(path) {
         return fetch(`${this.rootPath}/${path}`)
     }
@@ -31,13 +35,7 @@ class ServerApi {
         })
     }
     #parseError(error) {
-        if (+error === this.#errorEnum.ErrorBadQuery) {
-            return new Error("Неверный запрос!")
-        }
-        if (+error === this.#errorEnum.ErrorBadLoginOrPassword) {
-            return new Error("Неверное имя пользователя или пароль!")
-        }
-        return new Error("Неизвестная ошибка!")
+        return this.#parsedErrorArray[error] ?? "Неизвестная ошибка!"
     }
     /** @param {string} username @param {string} password @throws {Error}*/
     async login(username, password) {
@@ -45,6 +43,14 @@ class ServerApi {
         if (q.err) {
             throw this.#parseError(q.err)
         }
+    }
+    /**@returns {Promise<{name: string, address: string, port: string}[]>}*/
+    async getServerList() {
+        const q = await (await this.#get("servers")).json()
+        if (q.err) {
+            throw this.#parseError(q.err)
+        }
+        return q.list
     }
 }
 
