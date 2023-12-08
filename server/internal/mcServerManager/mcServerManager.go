@@ -1,6 +1,7 @@
 package mcservermanager
 
 import (
+	"fmt"
 	"mcap/internal/rcon"
 	"os"
 	"os/exec"
@@ -33,8 +34,9 @@ func New(s *ServerConfig) *MinecraftServer {
 	}
 }
 
-func (m *MinecraftServer) Start(args ...string) error {
-	cmd := exec.Command(m.Config.RunCommand, args...)
+func (m *MinecraftServer) Start() error {
+	cmd := exec.Command(m.Config.RunCommand, m.Config.Args...)
+	fmt.Println(m.Config.RunCommand, m.Config.Args)
 	m.proc = cmd.Process
 	ch := make(chan string)
 	m.logs = ch
@@ -66,6 +68,7 @@ type StringReader struct {
 
 func (sr *StringReader) Write(p []byte) (n int, err error) {
 	s := string(p)
+	fmt.Println(s)
 	go writeS(s, sr.OutputBroadcast)
 	return len(p), nil
 }

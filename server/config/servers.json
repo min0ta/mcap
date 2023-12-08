@@ -1,7 +1,7 @@
 [
     {
         "name":"skywars",
-        "runCommand":"./servers/skywars",
+        "runCommand":"bash script.sh",
         "address":"example.com",
         "port":"2017",
         "rconAddress":"test.example",

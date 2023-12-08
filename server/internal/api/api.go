@@ -77,6 +77,7 @@ func (s *ApiServer) execRcon(w http.ResponseWriter, r *http.Request) {
 
 	res, err := s.mcServers[serverIndex].Rcon.Exec(q.Command)
 	if err != nil {
+		s.logger.WriteFormat("cannot execute rcon with error %v", err)
 		errors.HttpError(w, errors.ErrorCannotAccessRcon, 500)
 		return
 	}
@@ -112,6 +113,7 @@ func (s *ApiServer) startServer(w http.ResponseWriter, r *http.Request) {
 	}
 	err = s.mcServers[index].Start()
 	if err != nil {
+		s.logger.WriteFormat("cannot start server with error %v", err)
 		errors.HttpError(w, errors.ErrorCannotStartMcServer, 500)
 		return
 	}
