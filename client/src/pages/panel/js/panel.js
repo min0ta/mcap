@@ -80,12 +80,19 @@ function renderError(displayableError, ...err) {
     errorOutput.textContent = displayableError
     throw new Error(err)
 }
+// serverToggleButton.addEventListener("click", () => {
+//     if (state.isServerOnline) {
+//         // stop
+//         return
+//     }
+//     //start
+// })
 
 async function main() {
     lockUI()
     const params = parseParams()
     if (params["server"] == null) {
-        renderError("Сервер не указан!")
+        renderError("Сервер не указан!", "no server provided", JSON.stringify(params))
     }
     const server = params["server"]
     try {

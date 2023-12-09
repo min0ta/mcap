@@ -11,7 +11,10 @@ function gid(idName) {
  * @param {string} err 
  */
 function logError(err) {
-    const log = sessionStorage.getItem("errlog") ?? ""
+    let log = sessionStorage.getItem("errlog") ?? ""
+    if (log.length > 100) {
+        log = ""
+    }
     sessionStorage.setItem("errlog",`${log}\n${new Date()}: ${err}`)
 }
 class ServerApi {
@@ -63,6 +66,12 @@ class ServerApi {
         const q = await (await this.#post("server", {server})).json()
         this.#assert(q.err == null, q.err)
         return q
+    }
+    /**@param {string} server  */
+    async startServer(server) {
+        const q = await (await this.#post("start", {server})).json()
+        this.#assert(q.err == null, q.err)
+        return q.success
     }
 }
 
