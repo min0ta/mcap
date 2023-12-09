@@ -78,21 +78,28 @@ function parseParams() {
 function renderError(displayableError, ...err) {
     logError(err.join(" "))
     errorOutput.textContent = displayableError
-    throw new Error(err)
 }
-// serverToggleButton.addEventListener("click", () => {
-//     if (state.isServerOnline) {
-//         // stop
-//         return
-//     }
-//     //start
-// })
+
+function clearError() {
+    errorOutput.textContent = ""
+}
+
+function dick(callback) {
+    lockUI()
+        try {
+            callback()
+        } catch (e) {
+            renderError(e)
+        }
+        unlockUI()
+}
 
 async function main() {
     lockUI()
     const params = parseParams()
     if (params["server"] == null) {
         renderError("Сервер не указан!", "no server provided", JSON.stringify(params))
+        return
     }
     const server = params["server"]
     try {
@@ -101,8 +108,20 @@ async function main() {
         serverHeader.textContent = info.name
     } catch (e) {
         renderError(e, "getServerState() error! server name =",server,"error:", e)
+        throw e
     }
-
+    
     unlockUI()
+
+    serverToggleButton.addEventListener("click", () => {
+        if (state.isUILocked) {
+            return
+        }
+        clearError()
+        if (state.isServerOnline) {
+            dick(() => api.stopServer(server))
+        }
+        dick(() => api.startServer(server))
+    })
 }
 main()

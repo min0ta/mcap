@@ -46,6 +46,7 @@ func (s *ApiServer) configureRouter() {
 	if s.cfg.TEST_ROUTE {
 		http.HandleFunc("/test", s.authorization.TestIfAuth)
 		http.HandleFunc("/rcon", s.execRcon)
+		http.HandleFunc("/stop", s.stopServer)
 	}
 }
 
@@ -113,6 +114,36 @@ func (s *ApiServer) startServer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	err = s.mcServers[index].Start()
+	if err != nil {
+		s.logger.WriteFormat("cannot start server with error %v", err)
+		errors.HttpError(w, errors.ErrorCannotStartMcServer, 500)
+		return
+	}
+	utils.WriteResult(w, utils.Response{
+		"success": true,
+	}, 200)
+}
+
+func (s *ApiServer) stopServer(w http.ResponseWriter, r *http.Request) {
+	role := s.authorization.AuthCheck(r)
+	if role == auth.RoleGuest {
+		errors.HttpError(w, errors.ErrorUnauthorized, 401)
+		return
+	}
+	q := serverStartQuery{}
+	err := utils.ReadJson(r, &q)
+	if err != nil {
+		errors.HttpError(w, errors.ErrorInvalidQuery, 400)
+		return
+	}
+	index := utils.Find(s.mcServers, func(mc *mcservermanager.MinecraftServer) bool {
+		return mc.Config.Name == q.Server
+	})
+	if index == -1 {
+		errors.HttpError(w, errors.ErrorInvalidQuery, 400)
+		return
+	}
+	err = s.mcServers[index].Stop()
 	if err != nil {
 		s.logger.WriteFormat("cannot start server with error %v", err)
 		errors.HttpError(w, errors.ErrorCannotStartMcServer, 500)

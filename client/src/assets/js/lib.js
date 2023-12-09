@@ -73,6 +73,12 @@ class ServerApi {
         this.#assert(q.err == null, q.err)
         return q.success
     }
+    /**@param {string} server  */
+    async stopServer(server) {
+        const q = await (await this.#post("stop", {server})).json()
+        this.#assert(q.err == null, q.err)
+        return q.success
+    }
 }
 
 const api = new ServerApi("http://localhost/api")
