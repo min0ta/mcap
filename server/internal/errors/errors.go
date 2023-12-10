@@ -13,6 +13,8 @@ const (
 	ErrorUnauthorized
 	ErrorCannotAccessRcon
 	ErrorCannotStartMcServer
+	ErrorUnknow
+	ErrorCannotUpgrade
 )
 
 type McapError struct {

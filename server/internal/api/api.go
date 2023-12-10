@@ -1,6 +1,7 @@
 package api
 
 import (
+	rconws "mcap/internal/api/rconWs"
 	"mcap/internal/auth"
 	"mcap/internal/config"
 	"mcap/internal/errors"
@@ -33,7 +34,6 @@ func (s *ApiServer) Start() error {
 		mcServer := mcservermanager.New(serverConfigs[i])
 		s.mcServers = append(s.mcServers, mcServer)
 	}
-
 	s.logger.WriteFormat("server started at port %s", s.cfg.SERVER_PORT)
 	return http.ListenAndServe(s.cfg.SERVER_PORT, nil)
 }
@@ -205,4 +205,28 @@ func (s *ApiServer) getServer(w http.ResponseWriter, r *http.Request) {
 		"online": s.mcServers[index].IsOnline,
 		"name":   q.Server,
 	}, 200)
+}
+
+func (s *ApiServer) serveLogs(w http.ResponseWriter, r *http.Request) {
+	role := s.authorization.AuthCheck(r)
+	if role != auth.RoleAdmin {
+		errors.HttpError(w, errors.ErrorUnauthorized, 401)
+		return
+	}
+	q := serverStartQuery{}
+	err := utils.ReadJson(r, q)
+	if err != nil {
+		errors.HttpError(w, errors.ErrorInvalidQuery, 400)
+		return
+	}
+
+	index := utils.Find(s.mcServers, func(ms *mcservermanager.MinecraftServer) bool {
+		return q.Server == ms.Config.Name
+	})
+	if index == -1 {
+		errors.HttpError(w, errors.ErrorInvalidQuery, 400)
+		return
+	}
+	server := s.mcServers[index]
+	go rconws.HandleConns(server, w, r)
 }
