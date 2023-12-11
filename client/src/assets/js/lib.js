@@ -31,6 +31,9 @@ class ServerApi {
         ErrorCannotStartMcServer: 4
     }
     #assert(predicate, errorCode) {
+        if (+errorCode === this.#errorEnum.ErrorUnauthorized) {
+            window.location.href = "/login/login"
+        }   
         if (!predicate) {
             throw this.#parseError(errorCode)
         }
@@ -40,7 +43,7 @@ class ServerApi {
         return fetch(`${this.rootPath}/${path}`)
     }
     /** @param {string} path @param {Object} body */
-    #post(path, body) {
+    #post(path, body = {}) {
         const b = JSON.stringify(body)
         return fetch(`${this.rootPath}/${path}`, {
             method: "POST",
@@ -78,6 +81,11 @@ class ServerApi {
         const q = await (await this.#post("stop", {server})).json()
         this.#assert(q.err == null, q.err)
         return q.success
+    }
+    async unauth() {
+        const q = await (await this.#post("unauth")).json()
+        this.#assert(q.err == null, q.err)
+        window.location.href = "/login/login"
     }
 }
 

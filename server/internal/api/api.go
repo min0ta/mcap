@@ -47,6 +47,8 @@ func (s *ApiServer) configureRouter() {
 		http.HandleFunc("/test", s.authorization.TestIfAuth)
 		http.HandleFunc("/rcon", s.execRcon)
 		http.HandleFunc("/stop", s.stopServer)
+		http.HandleFunc("/logs", s.serveLogs)
+		http.HandleFunc("/unauth", s.authorization.Unauthorize)
 	}
 }
 

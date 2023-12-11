@@ -92,6 +92,9 @@ func (s *Authoriztaion) Unauthorize(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.SetCookie(w, &cookie)
+	utils.WriteResult(w, utils.Response{
+		"success": true,
+	}, 200)
 }
 
 func (s *Authoriztaion) AuthCheck(r *http.Request) Role {
