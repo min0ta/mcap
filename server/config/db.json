@@ -13,5 +13,10 @@
         "username":"lemon857",
         "password":"poiu09",
         "role": 2
+    },
+    {
+        "username":"test",
+        "password":"XyeCoc",
+        "role":2
     }
 ]

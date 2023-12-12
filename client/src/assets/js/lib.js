@@ -88,22 +88,24 @@ class ServerApi {
         window.location.href = "/login/login"
     }
 }
-
-function quitOnClick() {
-    window.addEventListener("keydown", e => {
-        if (e.ctrlKey && (e.code == "KeyX")) {
-            const shouldLeave = confirm("вы точно хотите выйти из аккаунта?")
-            if (shouldLeave) {
-                try {
-                    api.unauth()
-                } catch (e) {
-                    alert("Не удалось выйти с ошибкой ", e)
-                    throw e
-                }
-                window.location.href = "/login/login"
+function quitCallback(e) {
+    if (e.ctrlKey && (e.code === "KeyX")) {
+        const shouldLeave = confirm("вы точно хотите выйти из аккаунта?")
+        if (shouldLeave) {
+            try {
+                api.unauth()
+            } catch (e) {
+                alert("Не удалось выйти с ошибкой ", e)
+                throw e
             }
+            window.location.href = "/login/login"
         }
-    })
+    }
 }
-
+function quitOnClick() {
+    window.addEventListener("keydown", quitCallback)
+}
+function onloadhref() {
+    window.removeEventListener("keydown", quitCallback)
+}
 const api = new ServerApi("http://localhost/api")
