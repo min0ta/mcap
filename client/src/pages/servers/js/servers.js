@@ -18,6 +18,7 @@ function serverRecord(serverName, href, version, online, playersCount) {
     </li>
     `, "text/html").body.children[0]
     template.children[0].href = href
+    createSmoothAnchor(template.children[0])
     template.children[0].children[0].children[0].textContent = serverName
     template.children[0].children[0].children[1].textContent = version
     template.classList.add(online ? "online" : "offline")

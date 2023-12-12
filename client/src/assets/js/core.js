@@ -8,12 +8,20 @@ async function loadHref(href) {
     let html = parser.parseFromString(pageText, "text/html")
     
     doc.querySelectorAll("link").forEach(v => {
-        if (v.attributes.mutable) {
+        if (!v.attributes.immutable) {
             v.remove()
         }
     })     
 
-    doc.querySelectorAll("script").forEach(v => v.remove())
+    doc.querySelectorAll("script").forEach(v => {
+        if (!v.attributes.immutable) {
+            v.remove()
+        }
+    })
+    doc.querySelectorAll("style").forEach(async v => {
+        if (v.attributes.generated)
+            v.remove()
+    })
     doc.querySelector("main").replaceWith(html.querySelector("main"))
 
     html.querySelectorAll("script").forEach(async v => {
@@ -26,21 +34,24 @@ async function loadHref(href) {
     html.querySelectorAll("link").forEach(async v => {
         if (!v.attributes.immutable) {
             let css = doc.createElement("style")
+            css.setAttribute("generated", "")
             css.append(await (await fetch(v.href)).text())
             doc.body.appendChild(css)
         }
     })
 }
 
-// UNCOMMENT THIS TO ENABLE DYNAMIC PAGE LOADING
-
-let a = doc.querySelectorAll("a").forEach(v => {
-    if (v.type === "") {
-        v.addEventListener("click", (e) => {
+function createSmoothAnchor(a) {
+    if (a.type === "") {
+        a.addEventListener("click", (e) => {
             e.preventDefault()
-            loadHref(v.href)
+            loadHref(a.href)
         })
     }
+}
+
+let a = doc.querySelectorAll("a").forEach(v => {
+    createSmoothAnchor(v)
 })
 
 
