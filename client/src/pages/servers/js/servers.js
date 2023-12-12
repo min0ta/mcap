@@ -56,3 +56,4 @@ function push(serverName, href, version, online, playersCount) {
         serversArray.append("Невозможно получить список серверов с ошибкой", e.toString())
     }
 })()
+quitOnClick()

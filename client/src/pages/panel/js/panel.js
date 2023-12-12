@@ -86,12 +86,12 @@ function clearError() {
 
 function dick(callback) {
     lockUI()
-        try {
-            callback()
-        } catch (e) {
-            renderError(e)
-        }
-        unlockUI()
+    try {
+        callback()
+    } catch (e) {
+        renderError(e)
+    }
+    unlockUI()
 }
 
 async function main() {
@@ -109,9 +109,9 @@ async function main() {
     } catch (e) {
         renderError(e, "getServerState() error! server name =",server,"error:", e)
         throw e
-    }
-    
+    }  
     unlockUI()
+    quitOnClick()
 
     serverToggleButton.addEventListener("click", () => {
         if (state.isUILocked) {
@@ -123,5 +123,6 @@ async function main() {
         }
         dick(() => api.startServer(server))
     })
+
 }
 main()
