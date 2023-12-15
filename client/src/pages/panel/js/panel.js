@@ -84,12 +84,13 @@ function clearError() {
     errorOutput.textContent = ""
 }
 
-function dick(callback) {
+async function lockRenderErrUnlock(callback) {
     lockUI()
     try {
-        callback()
+        await callback()
     } catch (e) {
         renderError(e)
+        throw e
     }
     unlockUI()
 }
@@ -97,11 +98,11 @@ function dick(callback) {
 async function main() {
     lockUI()
     const params = parseParams()
-    if (params["server"] == null) {
+    const server = params["server"]
+    if (server == null) {
         renderError("Сервер не указан!", "no server provided", JSON.stringify(params))
         return
     }
-    const server = params["server"]
     try {
         const info = await api.getServerState(server)
         updateServerState(info.online)
@@ -113,16 +114,38 @@ async function main() {
     unlockUI()
     quitOnClick()
 
-    serverToggleButton.addEventListener("click", () => {
+    serverToggleButton.addEventListener("click",async () => {
         if (state.isUILocked) {
             return
         }
         clearError()
         if (state.isServerOnline) {
-            dick(() => api.stopServer(server))
+            try {
+                await lockRenderErrUnlock(async () => await api.stopServer(server))
+                updateServerState(false)
+            } catch (e) {
+                console.log(e)
+            }
         }
-        dick(() => api.startServer(server))
+        try {
+            lockRenderErrUnlock(async () => await api.startServer(server))
+            updateServerState(true)
+        } catch (e) {
+            console.log(e)
+        }
+        window.location.reload()
     })
-
+    if (!state.isServerOnline) {
+        return
+    }
+    const ws = createConn(server)
+    ws.onmessage = (ev) => {
+        console.log(ev.data)
+    }
+    const interval = setInterval(async () => {
+        ws.send(JSON.stringify({type:"keep"}))
+    }, 7000)
+    ws.onerror = (e) => clearInterval(interval)
+    ws.onclose = (e) => clearInterval(interval)
 }
 main()

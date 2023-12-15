@@ -1,7 +1,7 @@
 [
     {
         "name":"skywars",
-        "runCommand":"bash script.sh",
+        "runCommand":"go run scipt.go",
         "address":"example.com",
         "port":"2017",
         "rconAddress":"test.example",

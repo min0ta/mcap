@@ -109,3 +109,11 @@ function onloadhref() {
     window.removeEventListener("keydown", quitCallback)
 }
 const api = new ServerApi("http://localhost/api")
+
+function createConn(server) {
+    const ws = new WebSocket("ws://localhost:8080/logs")
+    ws.onopen = () => {
+        ws.send(JSON.stringify({server}))
+    }
+    return ws
+}

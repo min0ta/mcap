@@ -47,6 +47,8 @@ func (s *ApiServer) configureRouter() {
 		http.HandleFunc("/test", s.authorization.TestIfAuth)
 		http.HandleFunc("/rcon", s.execRcon)
 		http.HandleFunc("/stop", s.stopServer)
+
+		// 99% it have a vulnerability that leaks/fork bombs your server
 		http.HandleFunc("/logs", s.serveLogs)
 		http.HandleFunc("/unauth", s.authorization.Unauthorize)
 	}
@@ -215,20 +217,5 @@ func (s *ApiServer) serveLogs(w http.ResponseWriter, r *http.Request) {
 		errors.HttpError(w, errors.ErrorUnauthorized, 401)
 		return
 	}
-	q := serverStartQuery{}
-	err := utils.ReadJson(r, q)
-	if err != nil {
-		errors.HttpError(w, errors.ErrorInvalidQuery, 400)
-		return
-	}
-
-	index := utils.Find(s.mcServers, func(ms *mcservermanager.MinecraftServer) bool {
-		return q.Server == ms.Config.Name
-	})
-	if index == -1 {
-		errors.HttpError(w, errors.ErrorInvalidQuery, 400)
-		return
-	}
-	server := s.mcServers[index]
-	go rconws.HandleConns(server, w, r)
+	rconws.GetLogs(s.mcServers, w, r)
 }
