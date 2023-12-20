@@ -132,6 +132,7 @@ async function main() {
             updateServerState(true)
         } catch (e) {
             console.log(e)
+            return
         }
         window.location.reload()
     })

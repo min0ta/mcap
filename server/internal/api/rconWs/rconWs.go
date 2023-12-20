@@ -11,10 +11,6 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-type Message struct {
-	Text  string
-	Yours bool
-}
 type InitQuery struct {
 	Server string `json:"server"`
 }
@@ -58,10 +54,7 @@ func GetLogs(servers []*mcservermanager.MinecraftServer, w http.ResponseWriter, 
 		return
 	}
 	server := servers[index]
-	if err != nil {
-		ws.WriteJSON(errors.ErrorInvalidQuery)
-		return
-	}
+
 	err = ws.WriteJSON(Res{
 		Type: TypeLogs,
 		Text: server.ReadLogs(),
@@ -87,7 +80,6 @@ func GetLogs(servers []*mcservermanager.MinecraftServer, w http.ResponseWriter, 
 			msg := Req{}
 			err := ws.ReadJSON(&msg)
 			if err != nil {
-				fmt.Println("err ", err)
 				shouldReturn = true
 				return
 			}
