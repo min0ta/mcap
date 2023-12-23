@@ -149,7 +149,7 @@ func (s *ApiServer) stopServer(w http.ResponseWriter, r *http.Request) {
 	}
 	err = s.mcServers[index].Stop()
 	if err != nil {
-		s.logger.WriteFormat("cannot start server with error %v", err)
+		s.logger.WriteFormat("cannot stop server with error %v", err)
 		errors.HttpError(w, errors.ErrorCannotStartMcServer, 500)
 		return
 	}

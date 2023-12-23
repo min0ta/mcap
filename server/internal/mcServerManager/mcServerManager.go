@@ -1,6 +1,7 @@
 package mcservermanager
 
 import (
+	"fmt"
 	"mcap/internal/rcon"
 	"os"
 	"os/exec"
@@ -19,8 +20,9 @@ func init() {
 var signal os.Signal
 
 type MinecraftServer struct {
-	Config   *ServerConfig
-	proc     *os.Process
+	Config *ServerConfig
+	// proc     *os.Process
+	cmd      *exec.Cmd
 	newLogs  chan string
 	logs     string
 	Rcon     *rcon.RconClient
@@ -37,7 +39,6 @@ func New(s *ServerConfig) *MinecraftServer {
 
 func (m *MinecraftServer) Start() error {
 	cmd := exec.Command(m.Config.RunCommand, m.Config.Args...)
-	m.proc = cmd.Process
 	ch := make(chan string, 1)
 	m.newLogs = ch
 	m.Rcon.Dial()
@@ -51,10 +52,12 @@ func (m *MinecraftServer) Start() error {
 	if err != nil {
 		return err
 	}
+	fmt.Println(cmd.Process.Pid)
+	m.cmd = cmd
+
 	m.IsOnline = true
 	return nil
 }
-
 func (m *MinecraftServer) ReadLogs() string {
 	return m.logs
 }
@@ -66,7 +69,18 @@ func (m *MinecraftServer) GetUpdates() string {
 
 func (m *MinecraftServer) Stop() error {
 	m.IsOnline = false
-	return m.proc.Signal(signal)
+	fmt.Println(m.cmd.Process.Pid)
+	err := m.cmd.Process.Kill()
+	if err != nil {
+		fmt.Println("sigerr", err)
+		return err
+	}
+	// err = exec.Command("kill", "-KILL", fmt.Sprint(m.cmd.Process.Pid)).Run()
+	// if err != nil {
+	// 	fmt.Println("cannot kill procc")
+	// 	return err
+	// }
+	return nil
 }
 
 func (sr *StringReader) writeS(s string) {
@@ -82,5 +96,6 @@ type StringReader struct {
 func (sr *StringReader) Write(p []byte) (n int, err error) {
 	s := string(p)
 	go sr.writeS(s)
+	fmt.Println(s)
 	return len(p), nil
 }

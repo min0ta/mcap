@@ -75,11 +75,38 @@ button[disabled] {
     color: #bdbdbd;
 }
 
+
+.rcon {
+    width: clamp(240px, 80vw, 720px);
+    height: clamp(240px, 60vh, 720px);
+    max-width: 80%;
+    background-color: black;
+    color: whitesmoke;
+    border: 3px #6d6d6d solid;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+ul {
+    overflow: scroll;
+    padding: 0px 5px;
+    word-wrap: break-word;
+    display: flex;
+    overflow-y: auto;
+    flex-direction: column-reverse;
+}
+p {
+    white-space: break-spaces;
+    word-break: break-word;
+}
+li {
+    margin-top: 5px;
+}
 input {
     color: #ddd;
     font-size: 16px;
+    border-top: 3px #6d6d6d  solid;
 }
- 
 @media (max-width: 800px) {
     header {
         height: 40px;

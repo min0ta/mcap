@@ -27,6 +27,7 @@ type Res struct {
 const (
 	TypeKeepAlive = "keep"
 	TypeLogs      = "logs"
+	TypeOld       = "old"
 )
 
 var upgrader = websocket.Upgrader{CheckOrigin: func(r *http.Request) bool { return true }}
@@ -56,7 +57,7 @@ func GetLogs(servers []*mcservermanager.MinecraftServer, w http.ResponseWriter, 
 	server := servers[index]
 
 	err = ws.WriteJSON(Res{
-		Type: TypeLogs,
+		Type: TypeOld,
 		Text: server.ReadLogs(),
 	})
 	if err != nil {

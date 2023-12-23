@@ -95,6 +95,15 @@ async function lockRenderErrUnlock(callback) {
     unlockUI()
 }
 
+function createRecord(text) {
+    const el = document.createElement("li")
+    el.append(
+        document.createElement("p")
+    )
+    el.children[0].textContent = text
+    return el
+}
+
 async function main() {
     lockUI()
     const params = parseParams()
@@ -125,7 +134,9 @@ async function main() {
                 updateServerState(false)
             } catch (e) {
                 console.log(e)
+                return
             }
+            return
         }
         try {
             lockRenderErrUnlock(async () => await api.startServer(server))
@@ -136,12 +147,23 @@ async function main() {
         }
         window.location.reload()
     })
+    /**
+     * @type {HTMLDivElement}
+    */
+    const logOutput = gid("js-logs")
+
     if (!state.isServerOnline) {
         return
     }
-    const ws = createConn(server)
+    const ws = createConn(server) 
     ws.onmessage = (ev) => {
         console.log(ev.data)
+        const msg = JSON.parse(ev.data)
+        if (msg.type == "logs") {
+            logOutput.prepend(
+                createRecord(msg.text)
+            )
+        }
     }
     const interval = setInterval(async () => {
         ws.send(JSON.stringify({type:"keep"}))
